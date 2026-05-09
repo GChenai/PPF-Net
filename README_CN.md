@@ -1,55 +1,55 @@
 ﻿# PPF-Net
 
-PPF-Net is a research codebase for fast terahertz reflectance spectrum reconstruction.
+PPF-Net 是一个面向**太赫兹反射光谱快速重建**的研究型代码仓库。
 
-The current repository focuses on:
+当前仓库的重点包括：
 
-- THz-only reflectance spectral priors
-- RGB-guided multimodal fusion
-- pixel-wise and patch-wise spectral reconstruction
-- full-cube rebuilding, CSV export, image-map generation, and reconstruction analysis
+- THz-only 反射光谱先验学习
+- RGB 引导的多模态特征融合
+- 像素级与 patch 级光谱重建
+- 完整 THz 立方体重建、CSV 导出与成像分析
 
-## Current Mainline
+## 当前主线
 
-The strongest line in this repository is:
+当前仓库中最强的实验主线是：
 
-1. Stage 1: train a THz-only FS pixel-wise spectral reconstruction model
-2. Stage 2: train a paired RGB + FS reconstruction model
-3. upgrade the fusion unit from single-pixel conditioning to local patch / local-region fusion
-4. compare against FS-only, interpolation baselines, and extra learning baselines such as TCN
+1. 第一阶段训练 THz-only FS 反射光谱像素级重建模型
+2. 第二阶段训练 RGB + FS 配对重建模型
+3. 把融合单位从单像素提升到局部 patch / 局部区域级
+4. 与 FS-only、传统插值方法以及额外深度学习基线做对比
 
-The current experiments show that the main gain comes from **patch / local-region multimodal fusion**, rather than simple RGB concatenation alone.
+现有结果表明，真正带来提升的关键是 **patch / 局部区域级跨模态融合**，而不是简单 RGB 拼接。
 
-## Repository Layout
+## 仓库结构
 
 - `ppfnet/`
-  Main Python package.
+  核心 Python 包。
 - `scripts/`
-  Data preparation, training, reconstruction, visualization, analysis, and benchmark scripts.
+  数据处理、训练、重建、可视化、分析和 benchmark 脚本。
 - `outputs/`
-  Checkpoints, logs, reconstructed CSV files, image maps, and experiment summaries.
+  checkpoint、日志、重建 CSV、成像图和分析结果。
 - `datasets/`
-  RGB images and raw THz CSV data.
+  RGB 图像和原始 THz CSV 数据。
 
-## Installation
+## 安装
 
-Install the common dependencies used in the project:
+先安装常用依赖：
 
 ```powershell
 pip install numpy scipy pillow matplotlib torch torchvision
 ```
 
-Install the package in editable mode if needed:
+如果需要以可编辑模式安装项目：
 
 ```powershell
 pip install -e .
 ```
 
-## Recommended Workflow
+## 推荐实验流程
 
-The commands below follow the experiment folders currently used in this repository, such as `outputs/stage1_*` and `outputs/stage2_*`.
+下面的命令采用你当前仓库里实际在用的实验目录风格，例如 `outputs/stage1_*`、`outputs/stage2_*`。
 
-### 1. Train the Stage-1 THz-only teacher
+### 1. 训练第一阶段 THz-only teacher
 
 ```powershell
 & D:/env/YOLO/python.exe scripts/train_stage1_pixel_spectral_unet.py `
@@ -63,7 +63,7 @@ The commands below follow the experiment folders currently used in this reposito
   --amp
 ```
 
-### 2. Train the Stage-2 FS-only baseline
+### 2. 训练第二阶段公平基线 FS-only
 
 ```powershell
 & D:/env/YOLO/python.exe scripts/train_stage2_fs_only_baseline.py `
@@ -77,7 +77,7 @@ The commands below follow the experiment folders currently used in this reposito
   --amp
 ```
 
-### 3. Train the final RGB + FS patch model
+### 3. 训练最终的 RGB + FS patch 模型
 
 ```powershell
 & D:/env/YOLO/python.exe scripts/train_stage2_rgb_fs_patch_student.py `
@@ -95,9 +95,9 @@ The commands below follow the experiment folders currently used in this reposito
   --amp
 ```
 
-### 4. Reconstruct the test set and export CSV/image maps
+### 4. 重建测试集并导出 CSV / 成像图
 
-FS-only baseline:
+FS-only baseline：
 
 ```powershell
 & D:/env/YOLO/python.exe scripts/reconstruct_stage2_fs_only_testset.py `
@@ -107,7 +107,7 @@ FS-only baseline:
   --batch-size 512
 ```
 
-Patch model:
+Patch 模型：
 
 ```powershell
 & D:/env/YOLO/python.exe scripts/reconstruct_stage2_patch_testset.py `
@@ -117,7 +117,7 @@ Patch model:
   --batch-size 128
 ```
 
-### 5. Analyze spectral and image-map metrics
+### 5. 运行光谱与成像分析
 
 ```powershell
 & D:/env/YOLO/python.exe scripts/analyze_thz_reconstruction.py `
@@ -125,7 +125,7 @@ Patch model:
   --output-dir outputs\stage2_rgb_fs_patch_student\predictions\test_reconstruction\analysis
 ```
 
-### 6. Benchmark model size and inference speed
+### 6. 统计模型参数量与推理速度
 
 ```powershell
 & D:/env/YOLO/python.exe scripts/benchmark_inference_models.py `
@@ -143,22 +143,22 @@ Patch model:
   --output-json outputs\model_benchmark.json
 ```
 
-## External Comparison Baselines
+## 外部对比实验
 
-The repository currently supports:
+当前仓库已经支持：
 
-- traditional interpolation baselines
-  - linear interpolation
-  - PCHIP
-  - cubic spline
-- learning-based single-modality baselines
-  - Stage-2 FS-only baseline
-  - Stage-2 TCN baseline
-- multimodal models
-  - earlier pixel-level RGB + FS fusion
-  - final patch-based RGB + FS fusion
+- 传统插值方法
+  - 线性插值 `linear`
+  - `PCHIP`
+  - `cubic spline`
+- 单模态学习基线
+  - 第二阶段 `FS-only baseline`
+  - 第二阶段 `TCN baseline`
+- 多模态方法
+  - 早期像素级 `RGB + FS old`
+  - 最终 `RGB + FS patch`
 
-Interpolation baselines do not require training. They directly reconstruct the masked test set:
+传统插值方法不需要训练，只需直接对测试集做重建：
 
 ```powershell
 & D:/env/YOLO/python.exe scripts/reconstruct_stage2_interpolation_testset.py `
@@ -168,9 +168,10 @@ Interpolation baselines do not require training. They directly reconstruct the m
   --batch-size 512
 ```
 
-## Documentation
+## 文档入口
 
-- Chinese overview: [README_CN.md](./README_CN.md)
-- English script reference: [SCRIPTS_README.md](./SCRIPTS_README.md)
-- Chinese script reference: [SCRIPTS_README_CN.md](./SCRIPTS_README_CN.md)
+- 英文项目说明：[README.md](./README.md)
+- 英文脚本说明：[SCRIPTS_README.md](./SCRIPTS_README.md)
+- 中文脚本说明：[SCRIPTS_README_CN.md](./SCRIPTS_README_CN.md)
+
 
