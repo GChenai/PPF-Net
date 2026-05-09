@@ -20,6 +20,12 @@ The strongest line in this repository is:
 
 The current experiments show that the main gain comes from **patch / local-region multimodal fusion**, rather than simple RGB concatenation alone.
 
+## Experimental Comparison
+
+The figure below summarizes the trade-off between reconstruction quality and efficiency across the main baselines in this repository.
+
+![Comparison of efficiency, PSNR, and RMSE](./outputs/comparison_summary/publication_figures/comparison_efficiency_psnr_rmse.png)
+
 ## Repository Layout
 
 - `ppfnet/`
@@ -173,4 +179,3 @@ Interpolation baselines do not require training. They directly reconstruct the m
 - Chinese overview: [README_CN.md](./README_CN.md)
 - English script reference: [SCRIPTS_README.md](./SCRIPTS_README.md)
 - Chinese script reference: [SCRIPTS_README_CN.md](./SCRIPTS_README_CN.md)
-
