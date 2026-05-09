@@ -20,6 +20,12 @@ The strongest line in this repository is:
 
 The current experiments show that the main gain comes from **patch / local-region multimodal fusion**, rather than simple RGB concatenation alone.
 
+## Method Overview
+
+The overall framework of PPF-Net is illustrated below, covering THz spectral priors, RGB-guided fusion, and the final reflectance spectrum reconstruction pipeline.
+
+![PPF-Net framework overview](./outputs/abstruct.png)
+
 ## Experimental Comparison
 
 The figure below summarizes the trade-off between reconstruction quality and efficiency across the main baselines in this repository.
